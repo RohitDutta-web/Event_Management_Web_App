@@ -93,10 +93,10 @@ export const logIn = async (req, res) => {
 
     return res.status(200)
       .cookie("token", token, {
-        maxAge: 24 * 60 * 60 * 1000, 
+        maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: 'lax',
+        sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
       })
       .json({
         message: "Login successful",
@@ -132,3 +132,33 @@ export const logOut = async (req, res) => {
     });
   }
 };
+
+
+//guest logIn
+export const guestLogIn = async (req, res) => {
+  try {
+    const tokenData = { guest: true }
+    const token = jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: "1d" });
+
+    return res.status(200)
+      .cookie("token", token, {
+        maxAge: 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+      })
+      .json({
+        message: "Guest login successful",
+        token,
+        user: { name: "Guest", email: "guest@example.com" },
+        success: true
+      });
+
+  }
+  catch (e) {
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false
+    })
+  }
+}
