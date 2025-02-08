@@ -5,6 +5,7 @@ import helmet from "helmet";
 import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import userRouter from "./routes/user.routes.js";
 dotenv.config({})
 const app = express();
 const corsOptions = {
@@ -17,6 +18,9 @@ app.use(morgan(':method :url :status :response-time ms'));
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
+
+
+app.use("/api/user", userRouter)
 
 
 app.listen(process.env.PORT, () => {
