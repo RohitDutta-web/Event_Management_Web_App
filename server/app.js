@@ -6,6 +6,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.routes.js";
+import eventRouter from "./routes/event.routes.js";
 dotenv.config({})
 const app = express();
 const corsOptions = {
@@ -21,9 +22,10 @@ app.use(cookieParser());
 
 
 app.use("/api/user", userRouter)
+app.use("/api/event", eventRouter);
 
 
 app.listen(process.env.PORT, () => {
-  console.log("Server backed up");
+  console.log("Server running");
   connectToDb();
 })

@@ -23,8 +23,7 @@ const eventSchema = new mongoose.Schema({
   },
   attendees: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true
+    ref: "User"
   }],
   category: {
     type: String,
@@ -33,10 +32,30 @@ const eventSchema = new mongoose.Schema({
   },
   bannerImage: {
     type: String
+  },
+  status: {
+    type: String,
+    enum: ["upcoming", "ongoing", "cancelled", "finished"],
+    default: "upcoming"
   }
 }, { timestamps: true })
 
 eventSchema.index({ eventName: 1 })
+eventSchema.pre("save", function (next) {
+  const now = new Date();
+
+  if (this.status !== "cancelled") {
+    if (now < this.startTime) {
+      this.status = "upcoming";
+    } else if (now >= this.startTime && now <= this.endTime) {
+      this.status = "ongoing";
+    } else {
+      this.status = "finished";
+    }
+  }
+
+  next();
+});
 
 const Event = mongoose.model("Event", eventSchema)
 

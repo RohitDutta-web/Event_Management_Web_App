@@ -25,7 +25,7 @@ export const registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = await User.create({
+   await User.create({
       name,
       email,
       password: hashedPassword,
@@ -34,13 +34,7 @@ export const registerUser = async (req, res) => {
 
     return res.status(201).json({
       message: "Account created successfully!",
-      success: true,
-      user: {
-        id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-        phoneNumber: newUser.phoneNumber,
-      }
+      success: true
     });
 
   } catch (e) {
@@ -162,3 +156,4 @@ export const guestLogIn = async (req, res) => {
     })
   }
 }
+
