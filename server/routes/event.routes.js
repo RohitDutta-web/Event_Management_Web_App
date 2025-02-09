@@ -1,10 +1,11 @@
 import express from "express";
-import { listingEvent, updateEvent, cancelEvent } from "../controllers/event.controller.js";
+import { listingEvent, updateEvent, cancelEvent, getAllEvents } from "../controllers/event.controller.js";
 import { authMiddleWare } from "../middleware/auth.middleWare.js";
 const router = express();
 
 router.post("/enlist", authMiddleWare, listingEvent);
-router.post("/update/:id", authMiddleWare, updateEvent);
-router.post("/cancel/:id", authMiddleWare, cancelEvent)
+router.patch("/update/:id", authMiddleWare, updateEvent);
+router.get("/cancel/:id", authMiddleWare, cancelEvent);
+router.get("/getEvents", getAllEvents);
 
 export default router;
